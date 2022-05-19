@@ -1,0 +1,38 @@
+name: mac-master
+author: nthistle
+description: |-
+  Whew! My brand new MAC is finally finished. Find a vulnerability in it and I'll give you a flag!
+
+  `{{ nc }}`
+flag:
+  file: flag.txt
+
+provide:
+  - ./server.py
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31415

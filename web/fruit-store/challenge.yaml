@@ -1,0 +1,20 @@
+name: fruit-store
+author: kpdfgo
+description: |-
+  :lemonthink:
+
+  [Instancer](https://instancer.tjctf.org/fruit-store)
+flag:
+  file: server/flag.txt
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/node_modules/*
+        - server/flag.txt
+      files:
+        - server
+      additional:
+        - path: server/flag.txt
+          str: flag{fake_flag}

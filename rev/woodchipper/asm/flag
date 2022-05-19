@@ -1,0 +1,19 @@
+mov [0x1000], 0x6c66
+mov [0x1001], 0x6761
+mov [0x1002], 0x742e
+mov [0x1003], 0x7478
+mov [0x1004], 0
+mov r1, 0x1000
+xor r2, r2
+xor r3, r3
+sys S_open
+mov r1, r0
+mov r2, 0x2000
+mov r3, 60
+sys S_read
+mov r3, r0
+sys S_close
+mov r1, 1
+mov r2, 0x2000
+sys S_write
+ret

@@ -1,0 +1,19 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  padding: 2rem;
+  font-size: 5rem;
+}
+
+p {
+  font-family: 'Courier New', Courier, monospace;
+}

@@ -1,0 +1,10 @@
+name: rsa-apprentice
+author: nthistle
+description: |-
+  My friend sent me this secret message but I can't figure out how to decrypt it! Can you help?
+
+flag:
+  file: ./flag.txt
+
+provide:
+  - ./problem.txt

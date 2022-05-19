@@ -1,0 +1,11 @@
+name: complex-secrets
+author: kfb
+description: |-
+  Mr. Riemann came up with his own secret sharing scheme! Can you figure it out?
+
+flag:
+  file: ./flag.txt
+
+provide:
+  - ./encrypt.sage
+  - ./output.txt

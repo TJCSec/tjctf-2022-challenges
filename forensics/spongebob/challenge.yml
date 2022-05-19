@@ -1,0 +1,8 @@
+name: spongebob
+author: andrewxie
+description: |-
+  TJCTF is really cool and spongebob thinks so too. So cool in fact...wait a minute, isn't the meme usually 4 squares???
+flag: tjctf{such_pogg3rs_ctf}
+
+provide:
+  - ./image.png

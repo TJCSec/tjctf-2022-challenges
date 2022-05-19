@@ -1,0 +1,43 @@
+name: copper-master
+author: nthistle
+description: |-
+  I hate padding with randomness, but I heard you have to pad RSA to make it secure. So I invented this new type of padding that I call "quadratic padding" (patent pending). I'm pretty sure it's secure, but check it out for me, will you?
+
+  `{{ nc }}`
+flag:
+  file: flag.txt
+
+provide:
+  - ./server.py
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    resources:
+      limits:
+        cpu: 1000m
+      requests:
+        cpu: 500m
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31657

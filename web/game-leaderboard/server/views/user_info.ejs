@@ -1,0 +1,46 @@
+<!DOCTYPE >
+<html>
+	<head>
+        <meta charset="utf-8">
+        <title>User Information</title>
+        <link href="/styles.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+	<body class="min-h-full flex flex-col">
+		<div class="px-4 py-2 flex flex-col flex-grow items-center">
+            <% if (locals.notFound) { %>
+            <div class="text-3xl font-bold pb-2">
+                Profile not found!
+            </div>
+            <div>
+                <a href="/" class="text-blue-700 underline">Return to Leaderboard</a>
+            </div>
+            <% } else { %>
+            <div class="w-full md:w-1/2">
+                <div class="font-bold text-4xl text-center mb-4">
+                    Profile Page
+                </div>
+                <div>
+                    <div class="text-2xl">
+                        <b>User:</b>
+                        <%= locals.name %>
+                    </div>
+                    <div class="text-xl">
+                        <b>Score:</b>
+                        <%= locals.score %>
+                    </div>
+                    <div class="text-lg mb-3">
+                        You are rank <%= locals.rank %> out of <%= locals.total %>.
+                    </div>
+                    <div>
+                        <%= locals.flag %>
+                    </div>
+                    <div>
+                        <a href="/" class="text-blue-700 underline">Return to Leaderboard</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </body>
+</html>

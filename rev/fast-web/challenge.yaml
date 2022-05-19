@@ -1,0 +1,37 @@
+name: fast-web
+author: kfb
+description: |-
+  I'm sick of all these JavaScript libraries and bloated Python web frameworks!
+
+  {{link}}
+
+flag:
+  file: server/app/files/flag.txt
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/app/files/flag.txt
+      files:
+        - server/Dockerfile
+        - server/goahead/server
+        - server/app
+      additional:
+        - path: server/app/files/flag.txt
+          str: this is not the real flag
+
+containers:
+  main:
+    build: server
+    replicas: 1
+    ports:
+      - 80
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+expose:
+  main:
+    - target: 80
+      http: fast-web

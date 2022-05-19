@@ -1,0 +1,20 @@
+name: lamb-sauce
+author: kfb
+description: |-
+  where's the lamb sauce
+
+  {{link}}
+flag:
+  file: server/html/flag-9291f0c1-0feb-40aa-af3c-d61031fd9896.txt
+
+containers:
+  main:
+    build: server
+    replicas: 1
+    ports:
+      - 80
+
+expose:
+  main:
+    - target: 80
+      http: lamb-sauce

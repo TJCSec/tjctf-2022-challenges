@@ -1,0 +1,10 @@
+name: fake-geoguessr
+author: alilredapple
+description: |-
+  We don't do guess challs here at TJCTF, so that means no Geoguessr 😞 Since I took this photo myself, though, you can find out precisely where it was taken, and some Bonus Content™️, from my Camera Model Name to the Circle Of Confusion. Maybe you'll find a flag there?
+
+flag:
+  file: ./flag.txt
+
+provide:
+  - ./lake.jpg

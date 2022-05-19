@@ -1,0 +1,53 @@
+name: cheapest-cookies-2
+author: andy
+description: |-
+  Now that Andrew knows which Costco has the cheapest cookies, he has to get there - as quickly as possible!
+  He has given you 40 roads with the two endpoint locations and the distance of the road, and he starts at location 0 and the Costco is at location 20.
+  All roads are 2-way roads, meaning you can go from x to y and from y to x.
+  Please output the minimum distance needed to reach the Costco, and if there is no possible path, print -1. You will need to pass fifty tests to get the flag. And don't forget to be fast!
+
+  Sample Input:
+  ```
+  0 20 18
+  4 8 2
+  0 4 8
+  4 20 6
+  ```
+
+  Sample Output:
+  ```
+  14
+  ```
+
+  `{{ nc }}`
+flag:
+  file: ./flag.txt
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    environment:
+      JAIL_TIME: "60"
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31111

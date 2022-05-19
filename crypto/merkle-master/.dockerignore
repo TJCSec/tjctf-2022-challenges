@@ -1,0 +1,4 @@
+*
+!/Dockerfile
+!/flag.txt
+!/server.py

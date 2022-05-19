@@ -1,0 +1,10 @@
+name: boxed-python
+author: kfb
+description: |-
+  You've seen Bad Python, now get ready for Boxed Python!
+
+flag:
+  file: module/flag.txt
+
+provide:
+  - main/dist/boxed

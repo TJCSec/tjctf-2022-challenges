@@ -1,0 +1,17 @@
+name: sm-paint
+author: kpdfgo
+description: |-
+  I love art!
+
+  {{ link }}
+flag: tjctf{m5_p41Nt_onL1n3_3ck5de3}
+containers:
+  main:
+    build: server
+    replicas: 1
+    ports:
+      - 80
+expose:
+  main:
+    - target: 80
+      http: sm-paint

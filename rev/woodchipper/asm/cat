@@ -1,0 +1,11 @@
+# cat
+l_start:
+mov r1, 0
+mov r2, 0x1000
+mov r3, 1
+sys S_read
+mov r1, 1
+mov r2, 0x1000
+mov r3, 1
+sys S_write
+jmp l_start

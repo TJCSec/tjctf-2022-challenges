@@ -1,0 +1,1 @@
+`exiftool lake.jpg` should do the trick; flag is split between Copyright and Comment

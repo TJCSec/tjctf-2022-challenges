@@ -1,0 +1,44 @@
+name: portalstrology
+author: andy
+description: |-
+  I applied to DNU this year, and the admission results are coming out on May 17! But I really want to know my decision now though. I heard that other colleges had problems with accidentally leaking college decisions, you think DNU did the same?
+
+  Unfortunately, I forgot my password too, so you gotta figure that out as well. My username is `superigamerbean`.
+
+  {{link}}
+
+flag:
+  file: ./server/flag.txt
+containers:
+  main:
+    build: ./server
+    replicas: 1
+    ports:
+      - 3000
+    environment:
+        ENV: lmao
+
+expose:
+  main:
+    - target: 3000
+      http: dnu-financial-aid
+
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/flag.txt
+        - server/private/private.key
+        - server/static/jwks.json
+      files:
+        - server
+      additional:
+        - path: server/flag.txt
+          str: this is not the real flag
+        - path: server/README
+          str: private/private.key and static/jwks.json are not the real files on the server
+        - path: server/private/private.key
+          base64: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQ0xmUWJmRnNrYi9oN3IKWElYQzE0L3NEdTZvdDVMVHg1TEJ1cWNKQ0FZUnZUS3ZTb1NVN091NlFIYlVtT05aNFIvbDBsNE13VExuNTlWaQpBZ3hPbHhyRTUvMnk2YVdTa3MvNkxQQ05HcHg2dTZMdm9QTVdYUytLWklhVEJuT0JORE5YdTdXbEdTazdHS3hxClJxdU9kWEZmVGp6ZGZ1TWhMVS9ZbHBCaEovSUJvMEltUnQ2RjYrSXlxV1hyazVRNWwvNnZZS3JCOFlQRVl4bVUKN2lJSFE5S1FtY0MzS2ZSWWFQNW5sbzdtM2RCWUFIdG5lbHNudWdENG84eXBYL0hYRmYwRnZld3F6N3l1TzR5NQpPQVBBQmp6akU1cUlsRG0yL3VMdEd5Zk8wcUxVMk9WNUJIRitWay9ERHNEbUNqbUp3dWZhV3pZUGpoTTlQd3E2CkIya0E2VHRwQWdNQkFBRUNnZ0VBREt3bExhdGlSZnJHVUZldGgxQVNNVDRDREszdzF2Q3dzbzBFazl0NHdhL1EKcFFBK0gxR084UExlV040eStYMXNhbks4UEtob3VZemtZKzBQdFN3aE1IWnJKQS82RE9EdHFDcmhCOUM5R3FGbApZaVBiTWRMeGVMODlRcW81WUNtZjZINlRPQmFiR2xWWmhLWTYrOHhMcW43dkpLaGNkaTBwcmVHdjZFTzZ4czh0CkJ5clBkMktHMDNrUGdwS0FIYXJ2dUxIQjlkMS8xeEY2d0xySW10aFV0SnRFSlRxdXBqNC93NW52UjhtWjVPeHcKcFZxbTVsU3d0TXczOWM0Ym1JZUtZTkZVMk5OM0xTajhYbC93ZWJtbVR4ZEJPQ29HNitXWTljTU1mVncxbkdYTQpNYjVUb0x5RHo4Q2F3KzZBSDFhSEdkalVQZ04zeUZZeC9HSXR2TUxXcVFLQmdRRHNRcm9Mc0lCdnJEbzVsSCt4CkdjUHExLzlGVjg5UkpGQ041ell3OUZnV2l6cEZwandFYVpDN3ZCWks1RFc2UXZDajJYbFB3VjgwYXc5UEVaVFAKVXJpQnBWdFpyNEYwazZPZ2w0enNQc3BNM1plZUNXTUtaenpnSFpDOVlwRUZsZkh3VHBuZ080ZXFzc005emZvaAp5b3JUa0srcy9yWURCNTd5bjRFc2RnV3NGd0tCZ1FDWEpIdEErMWUrK1BzMmdNaWROSUhsRThVSWp3d3lRY1NPCjJmQkxvOTA0bFg5d0NhdWtaRVdraVRQenlvMHZLMmZVdWMzME9iMzlhenF1aFk5bFRsQWRNdjVSdVBMMUdCZTYKU0lZVUZGeXpCVlRDcGhmYk5zdzFEdFN6MTgyUmhrMHRiTEcxMlIyOEF4N0dEeWEwM01YR3ROSGlZRHBHa0xGSApYK25Qakt1RWZ3S0JnUUNhWkNTRi9RcUJiNUFCRHJ5L00vSW1wbzRuZDNHQU9mWDJOWERoWHR1dHA4QWx3Yk1ZCnd3K1V6eDNXUlBtalJabFJ5WTBRQkhLOW8zUzJtK3VkN0JXc2l5MStGMFhHczdCTEFwNVJ4OXFWam4xRkJpZFYKcGc5TythTWJUNjByZEVoTlhHQUwrM3IxbnFvZDJsdXA5MXp2VW02cTR5eDRJR1BMYzFhTGduakVjd0tCZ0NpVgp0VHNId3RJWERXM2ZPdjlyb0EyaE4yRksrQjF1cDVjc1VtZ2RRa1AxY05qbTM5NHV4cnlkMHdOOXVsZVdNalZmCkJ6eXpYSjcxOGpYMnkwQ0t2Tng2V3V3YTI3S1FtNTU3NXZUeFdzci9mWGtmSEh6U3hCYmpPcDVvTGwwTFVTSUgKYzlpK3lrczRFMFZmd0NjRXVWN1lJeHZFZHlHSHJQTGJnRzhvK00yRkFvR0FKOVZhVDdUWXZDcUJqczBlK1dhUgo0eER6ZDhsRUw4VkJqeHBVdStDS2tsUjZyNUwwQjBPUmdJWWliamc0dVJiWE5YVWpDTFR0VDlKTUFGR2RORW92CjNYcHl6aFMxT1JJOGw1UXRWY2VRbUx4d0N3TXBLZkZTRTZiZjhZdmswZU1WSWFOcmFkb0l0VHNaTG9yN25QWFoKcXNNazhtNWI1ZWJFR005SDJXMWt3TzQ9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
+        - path: server/static/jwks.json
+          base64: ewogICAgImtleXMiOiBbCiAgICAgICAgewogICAgICAgICAgICAia2lkIjogIjEiLAogICAgICAgICAgICAia3R5IjogIlJTQSIsCiAgICAgICAgICAgICJlIjogIkFRQUIiLAogICAgICAgICAgICAidXNlIjogInNpZyIsCiAgICAgICAgICAgICJhbGciOiAiUlMyNTYiLAogICAgICAgICAgICAibiI6ICJpMzBHM3hiSkdfNGU2MXlGd3RlUDdBN3VxTGVTMDhlU3dicW5DUWdHRWIweXIwcUVsT3pydWtCMjFKampXZUVmNWRKZURNRXk1LWZWWWdJTVRwY2F4T2Y5c3VtbGtwTFAtaXp3alJxY2VydWk3NkR6RmwwdmltU0drd1p6Z1RRelY3dTFwUmtwT3hpc2FrYXJqblZ4WDA0ODNYN2pJUzFQMkphUVlTZnlBYU5DSmtiZWhldmlNcWxsNjVPVU9aZi1yMkNxd2ZHRHhHTVpsTzRpQjBQU2tKbkF0eW4wV0dqLVo1YU81dDNRV0FCN1ozcGJKN29BLUtQTXFWX3gxeFg5QmIzc0tzLThyanVNdVRnRHdBWTg0eE9haUpRNXR2N2k3UnNuenRLaTFOamxlUVJ4ZmxaUHd3N0E1Z281aWNMbjJsczJENDRUUFQ4S3VnZHBBT2s3YVEiCiAgICAgICAgfQogICAgXQp9

@@ -1,0 +1,43 @@
+name: morph-master
+author: nthistle
+description: |-
+  My friend Pascal made this new cryptosystem and challenged me to encrypt without the full public key! Can you help me?
+
+  `{{ nc }}`
+flag:
+  file: flag.txt
+
+provide:
+  - ./server.py
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    resources:
+      limits:
+        cpu: 1000m
+      requests:
+        cpu: 500m
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31996

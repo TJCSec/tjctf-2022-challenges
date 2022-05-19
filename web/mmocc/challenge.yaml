@@ -1,0 +1,27 @@
+name: mmocc
+author: BrownieInMotion
+description: |-
+  Massively multiplayer online cookie clicker!!
+
+  {{link}}
+
+flag:
+  file: app/flag.txt
+provide:
+  - app/index.js
+
+containers:
+  main:
+    build: app
+    replicas: 1
+    ports:
+      - 3000
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+
+expose:
+  main:
+    - target: 3000
+      http: mmocc

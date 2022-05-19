@@ -1,0 +1,40 @@
+name: jokster
+author: kpdfgo
+description: |-
+  I love jokes. So much, even, that I could no longer think of my own. Because of that, I made this so I could yours!!!
+
+  {{ link }}
+
+  [Admin Bot](https://admin-bot.tjctf.org/jokster)
+flag:
+  file: server/flag.txt
+
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/uploads/*
+        - "!server/uploads/default.png"
+        - server/flag.txt
+        - server/admin-password.txt
+        - server/node_modules/
+      files:
+        - server
+      additional:
+        - path: server/flag.txt
+          str: this is not the real flag
+        - path: server/admin-password.txt
+          str: this is not the real password
+  - admin-bot.js
+
+containers:
+  main:
+    build: server
+    replicas: 1
+    ports:
+      - 3000
+expose:
+  main:
+    - target: 3000
+      http: jokster

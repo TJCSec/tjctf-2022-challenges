@@ -1,0 +1,32 @@
+name: fleecebook
+author: kpdfgo
+description: |-
+  I made a place to post all you want about fleece!
+
+  I guess you could say, it's kinda meta...
+
+  {{ link }}
+
+  [Admin Bot](https://admin-bot.tjctf.org/fleecebook)
+flag:
+  file: flag.txt
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/database/*
+      files:
+        - server
+  - admin-bot.js
+
+containers:
+  main:
+    build: server
+    replicas: 1
+    ports:
+      - 5000
+expose:
+  main:
+    - target: 5000
+      http: fleecebook

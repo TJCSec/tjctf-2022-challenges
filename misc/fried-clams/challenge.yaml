@@ -1,0 +1,40 @@
+name: fried-clams
+author: kfb
+description: |-
+  so what do you do with the shells then?
+
+  `{{ nc }}`
+
+provide:
+  - bin/chall
+  - Dockerfile
+
+flag:
+  file: bin/flag.txt
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31413

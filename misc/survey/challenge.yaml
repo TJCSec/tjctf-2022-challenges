@@ -1,0 +1,9 @@
+name: survey
+author: TJCTF Organizers
+description: |-
+  Please fill out our [survey](https://forms.gle/w8i6zdUaq5Qg67iP7) so we can make TJCTF beter next year!
+
+flag: tjctf{gg_go_next}
+
+value: 1
+tiebreakEligible: false

@@ -1,0 +1,10 @@
+name: block-game
+author: kpdfgo
+description: |-
+  I made a game with some blocks! I worked out how to save but I can't load my worlds back. It's ok, it wasn't that important anyway...
+
+provide:
+  - bin/chall.jar
+  - bin/data.dat
+
+flag: tjctf{i_lov3_b10Ck5_cbd7c}

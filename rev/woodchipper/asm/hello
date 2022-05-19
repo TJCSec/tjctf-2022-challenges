@@ -1,0 +1,10 @@
+# hello world
+mov r1, 1
+mov r2, l_hello
+mov r3, 14
+sys S_write
+mov r1, 0
+sys S_exit
+
+l_hello:
+.str 'Hello, world!\n'

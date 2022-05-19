@@ -1,0 +1,22 @@
+name: game-leaderboard
+author: andy
+description: |-
+  I (superandypancake) signed up for this tournament to win a flag! Unfortunately, I'm not so good. But I'm sure there still is a way to get the flag... right?!?
+
+  {{link}}
+
+flag:
+  file: server/flag.txt
+containers:
+  main:
+    build: server
+    ports:
+      - 3000
+
+expose:
+  main:
+    - target: 3000
+      http: game-leaderboard
+
+provide:
+  - ./server/index.js

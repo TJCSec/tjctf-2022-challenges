@@ -1,0 +1,39 @@
+name: dnu-merch
+author: laoweiaustin
+description: |-
+  So, since everybody got into DNU during the RD round, we can all buy merch. However, I didn't get honors so I can't buy their super secret flag.
+  I heard that the admin of the site is actually an honors student at DNU, pls sice me.
+
+  {{ link }}
+
+  [Admin Bot](https://admin-bot.tjctf.org/dnu-merch)
+flag:
+  file: server/flag.txt
+
+containers:
+  main:
+    build: server
+    replicas: 1
+    ports:
+      - 8080
+    environment:
+        ENV: production
+
+expose:
+  main:
+    - target: 8080
+      http: dnu-merch
+
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/flag.txt
+        - server/.gitignore
+      files:
+        - server
+      additional:
+        - path: server/flag.txt
+          str: tjctf{fake_flag}
+  - admin-bot.js

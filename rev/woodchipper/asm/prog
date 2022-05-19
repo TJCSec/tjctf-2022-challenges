@@ -1,0 +1,360 @@
+# build histogram
+cal l_build_hist
+# build tree
+cal l_build_tree
+# prompt
+mov r1, 1
+mov r2, l_input_str
+mov r3, 7
+sys S_write
+# input
+mov r1, 0
+mov r2, l_input_dec_len
+mov r3, 512
+sys S_read
+# at least four bytes
+cge r0, 4
+jpf l_exit_fail
+# even numbers
+mov r1, r0
+div r1, 2
+mul r1, 2
+cet r1, r0
+jpf l_exit_fail
+div r0, 2
+sub r0, 2
+mov r1, [l_input_dec_len]
+div r1, 2
+mul r1, 2
+cet r1, [l_input_dec_len]
+jpf l_exit_fail
+mov [l_input_len], r0
+
+# decode
+cal l_huff_decode
+
+# crc-16
+cal l_crc
+cet r0, [l_input_crc]
+jpf l_exit_fail
+
+# jump to input
+cal l_decode_buf
+
+mov r1, 0
+jmp l_exit
+
+# exit
+l_exit_fail:
+mov r1, 1
+jmp l_exit
+l_exit:
+sys S_exit
+
+l_input_str:
+.str 'input: '
+l_input_len:
+.var 1
+l_input_dec_len:
+.var 1
+l_input_crc:
+.var 1
+l_input_buf:
+.var 510
+
+l_decode_buf:
+.var 1024
+
+l_nodebuf_ptr:
+.ptr l_nodebuf
+l_nodebuf:
+.var 2048
+l_alloc:
+mov r0, [l_nodebuf_ptr]
+add [l_nodebuf_ptr], 4
+ret
+
+# build histogram
+l_freqname:
+.str b'prog.bin\x00'
+l_freqbuf:
+.var 1
+l_freq:
+.var 256
+l_freqfd:
+.var 1
+l_build_hist:
+mov r1, l_freqname
+xor r2, r2
+xor r3, r3
+sys S_open
+mov [l_freqfd], r0
+l_freq_read:
+mov r1, [l_freqfd]
+mov r2, l_freqbuf
+mov r3, 1
+sys S_read
+cet r0, 0
+jpt l_freq_done
+mov r0, [l_freqbuf]
+and r0, 0xff
+add r0, l_freq
+mov r1, [r0]
+add r1, 1
+mov [r0], r1
+jmp l_freq_read
+l_freq_done:
+mov r1, [l_freqfd]
+sys S_close
+ret
+
+# make tree
+l_tree:
+.var 256
+l_tree_i:
+.var 1
+l_tree_smallest_a:
+.var 1
+l_tree_smallest_b:
+.var 1
+l_build_tree:
+# make leaves
+xor r3, r3
+jmp l_build_tree_make_leaves_end
+l_build_tree_make_leaves_next:
+mov r2, r3
+add r2, l_freq
+mov r1, [r2]
+cet r1, 0
+jpt l_build_tree_make_leaves_skip
+cal l_alloc
+mov r2, [l_tree_i]
+add r2, l_tree
+mov [r2], r0
+mov r2, [l_tree_i]
+add r2, 1
+mov [l_tree_i], r2
+mov [r0], r3
+add r0, 1
+mov [r0], r1
+l_build_tree_make_leaves_skip:
+add r3, 1
+l_build_tree_make_leaves_end:
+clt r3, 256
+jpt l_build_tree_make_leaves_next
+jmp l_build_tree_combine_end
+l_build_tree_combine_next:
+# remove two smallest
+cal l_build_tree_find_smallest
+mov r1, r0
+add r0, l_tree
+mov [l_tree_smallest_a], [r0]
+cal l_build_tree_remove
+
+cal l_build_tree_find_smallest
+mov r1, r0
+add r0, l_tree
+mov [l_tree_smallest_b], [r0]
+cal l_build_tree_remove
+
+# make new node
+cal l_alloc
+mov r2, [l_tree_i]
+add r2, l_tree
+mov [r2], r0
+mov r2, [l_tree_i]
+add r2, 1
+mov [l_tree_i], r2
+
+# add freqs
+add r0, 1
+mov r1, [l_tree_smallest_a]
+add r1, 1
+add [r0], [r1]
+mov r1, [l_tree_smallest_b]
+add r1, 1
+add [r0], [r1]
+# left
+add r0, 1
+mov [r0], [l_tree_smallest_a]
+# right
+add r0, 1
+mov [r0], [l_tree_smallest_b]
+l_build_tree_combine_end:
+cgt [l_tree_i], 1
+jpt l_build_tree_combine_next
+ret
+
+# remove from array
+l_build_tree_remove:
+mov r0, r1
+add r0, l_tree
+mov r2, r0
+add r1, 1
+add r2, 1
+jmp l_build_tree_remove_end
+l_build_tree_remove_next:
+mov [r0], [r2]
+add r0, 1
+add r1, 1
+add r2, 1
+l_build_tree_remove_end:
+clt r1, [l_tree_i]
+jpt l_build_tree_remove_next
+sub [l_tree_i], 1
+ret
+
+# find smallest
+l_build_tree_find_smallest:
+xor r1, r1
+mov r2, 0xffff
+xor r3, r3
+jmp l_build_tree_find_smallest_end
+l_build_tree_find_smallest_next:
+mov r0, r1
+add r0, l_tree
+mov r0, [r0]
+add r0, 1
+clt [r0], r2
+jpf l_build_tree_find_smallest_skip
+mov r2, [r0]
+mov r3, r1
+l_build_tree_find_smallest_skip:
+add r1, 1
+l_build_tree_find_smallest_end:
+clt r1, [l_tree_i]
+jpt l_build_tree_find_smallest_next
+mov r0, r3
+ret
+
+# crc-16
+l_crc_ptr:
+.ptr l_decode_buf
+l_crc:
+xor r0, r0
+jmp l_crc_end
+l_crc_next:
+mov r1, [l_crc_ptr]
+mov r1, [r1]
+and r1, 0xff
+cal l_crc_step
+mov r1, [l_crc_ptr]
+mov r1, [r1]
+shr r1, 8
+cal l_crc_step
+
+add [l_crc_ptr], 1
+sub [l_input_dec_len], 2
+l_crc_end:
+cet [l_input_dec_len], 0
+jpf l_crc_next
+ret
+
+l_crc_step:
+shl r1, 8
+xor r0, r1
+mov r3, 8
+jmp l_crc_step_end
+l_crc_step_next:
+mov r2, r0
+and r2, 0x8000
+cet r2, 0
+jpt l_crc_step_zero
+mov r2, 0x1021
+l_crc_step_zero:
+shl r0, 1
+xor r0, r2
+sub r3, 1
+l_crc_step_end:
+cet r3, 0
+jpf l_crc_step_next
+ret
+
+l_huff_ptr:
+.ptr l_input_buf
+l_huff_decode_ptr:
+.ptr l_decode_buf
+l_huff_decode_ptr_par:
+.var 1
+l_huff_nodeptr:
+.var 1
+l_huff_dec_len:
+.var 1
+l_huff_decode:
+mov [l_huff_dec_len], [l_input_dec_len]
+mov [l_huff_nodeptr], [l_tree]
+
+jmp l_huff_decode_end
+l_huff_decode_next:
+mov r1, [l_huff_ptr]
+mov r1, [r1]
+cal l_huff_decode_step
+
+add [l_huff_ptr], 1
+sub [l_input_len], 1
+l_huff_decode_end:
+cet [l_huff_dec_len], 0
+jpt l_huff_decode_ret
+cet [l_input_len], 0
+jpf l_huff_decode_next
+l_huff_decode_ret:
+ret
+
+l_huff_decode_step:
+mov r3, 16
+jmp l_huff_decode_step_end
+l_huff_decode_step_next:
+# check if null
+cet [l_huff_nodeptr], 0
+jpt l_exit_fail
+
+# traverse one step
+add [l_huff_nodeptr], 2
+mov r2, r1
+and r2, 1
+add [l_huff_nodeptr], r2
+mov r2, [l_huff_nodeptr]
+mov [l_huff_nodeptr], [r2]
+
+# check if leaf
+mov r2, [l_huff_nodeptr]
+mov r0, r2
+add r0, 2
+cet [r0], 0
+jpf l_huff_decode_step_skip
+add r0, 1
+cet [r0], 0
+jpf l_huff_decode_step_skip
+
+# write byte
+mov r0, [r2]
+and r0, 0xff
+mov r2, [l_huff_decode_ptr]
+cet [l_huff_decode_ptr_par], 0
+jpf l_huff_decode_step_write_odd
+
+mov [r2], r0
+add [l_huff_decode_ptr_par], 1
+jmp l_huff_decode_step_write_done
+l_huff_decode_step_write_odd:
+shl r0, 8
+or [r2], r0
+add [l_huff_decode_ptr], 1
+mov [l_huff_decode_ptr_par], 0
+l_huff_decode_step_write_done:
+mov [l_huff_nodeptr], [l_tree]
+
+sub [l_huff_dec_len], 1
+cet [l_huff_dec_len], 0
+jpt l_huff_decode_step_ret
+
+l_huff_decode_step_skip:
+shr r1, 1
+sub r3, 1
+l_huff_decode_step_end:
+cet r3, 0
+jpf l_huff_decode_step_next
+l_huff_decode_step_ret:
+ret
+
+.str b'\xbc\x0f\xe9\x79\x44\xc8\xf3\x52\xee\x3b\x3f\x5e\x2a\x91\x23\xd1\xef\xc0\x86\xc6\xb1\x18\x3e\x7d\xa3\x9e\x3a\x9c\xd0\x6d\xec\xd3\x27\x74\x70\x21\xb4\x85\xca\x03\x66\x04\xe1\x65\xe7\x63\xf0\x05\x4e\xeb\xa4\x35\x78\x6a\xd6\xce\xa6\x28\x99\xa5\x62\x8d\x29\xf4\x5d\xd8\xcb\xc1\x67\x43\x06\xb8\xac\x2c\x8f\xc2\x72\xf1\x4b\x2d\xc3\x4d\xe2\x57\xdf\xcf\x0a\x15\x4f\xe0\x22\x82\xe5\x1e\x7b\x69\x6c\x07\x49\xf7\xaa\x76\x46\x92\x1a\x0d\x24\xb3\x00\x68\xaf\xad\xe6\x81\xa7\xa2\x48\x54\x71\x34\xf2\x42\x83\xfb\x9d\xba\x47\x87\x4a\xdd\xc4\x20\x58\x51\xd7\x13\x61\x9a\xf8\x0e\xbe\x36\xe4\xf9\xff\x89\x17\xde\x60\x98\x7c\x55\x97\x6e\x50\x5a\x75\xa9\x10\xd4\xb2\xc5\xb0\xf5\x2e\x1c\x40\x94\x14\xe3\xe8\x9b\x8e\xed\xd2\x88\x77\xcc\x73\x8b\xc7\x19\x6b\x26\xfc\x7f\x2f\x25\x1d\xd9\x30\xea\x1b\x80\x2b\x5b\x12\x1f\xa0\x0b\x45\x37\xdc\xa1\x8c\xc9\x5c\xbd\x16\xab\x32\x93\x33\xf6\x31\xfe\x38\x90\xae\x8a\xb9\x01\x7e\x4c\xfa\x3d\xb6\x7a\x3c\x41\x53\xdb\x02\x11\x08\xda\x96\x09\x59\xb7\xcd\x9f\x0c\x6f\x64\xa8\xfd\xbb\x39\x5f\x56\xbf\x84\xb5\xd5\x95'

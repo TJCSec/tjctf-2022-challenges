@@ -1,0 +1,1 @@
+login, change jku header to own site with key, then use jwt.io to edit iat tag to be something later than 1652821200 and username to superigamerbean, refresh and find flag

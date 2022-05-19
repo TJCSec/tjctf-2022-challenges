@@ -1,0 +1,31 @@
+name: ascordle
+author: andy
+description: |-
+  I found this new worldle clone...
+
+  {{link}}
+
+flag:
+  file: server/flag.txt
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - server/.gitignore
+        - server/flag.txt
+      files:
+        - server
+      additional:
+        - path: server/flag.txt
+          str: flag{fake_flag}
+containers:
+  main:
+    build: server
+    ports:
+      - 3000
+
+expose:
+  main:
+    - target: 3000
+      http: ascordle

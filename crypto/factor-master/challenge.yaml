@@ -1,0 +1,45 @@
+name: factor-master
+author: nthistle
+description: |-
+  Every CTF has to have a factoring challenge! Let's see if you can factor all of these.
+
+  `{{ nc }}`
+flag:
+  file: flag.txt
+
+provide:
+  - ./server.py
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    environment:
+      JAIL_TIME: "180"
+    resources:
+      limits:
+        cpu: 1000m
+      requests:
+        cpu: 500m
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31782

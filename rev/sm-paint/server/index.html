@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <style>
+        body {
+            height: 100vh;
+            width: 100%;
+            margin: 0;
+            display: grid;
+            justify-items: center;
+            align-items: center;
+            text-align: left;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        #canvas {
+            border: 1px solid black;
+            height: 75vh;
+            max-height: 1000px;
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <h1>sm paint</h1>
+        <span>always innovating, never replacing</span>
+        <hr>
+        <canvas id="canvas"></canvas>
+        <div id="options">
+            <div>
+                <input type="color" id="color-picker">
+                <button onclick="_clearCanvas()">clear canvas</button>
+            </div>
+            <div>
+                <label for="brush-size-picker">radius</label>
+                <input type="range" id="brush-size-picker" min="1" max="10" value="2">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const canv = document.getElementById('canvas');
+        Module = {
+            canvas: canv
+        };
+    </script>
+
+    <script src="index.js"></script>
+
+    <script type="text/javascript">
+        document.getElementById('brush-size-picker').addEventListener('input', (e) => {
+            _setBrushSize(e.target.value);
+        });
+
+        document.getElementById('color-picker').addEventListener('input', (e) => {
+            const c = e.target.value.match(/[0-9a-fA-F]{2}/g).map(v => parseInt(v, 16));
+            _setColor(...c);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = canv.getBoundingClientRect();
+            const scale = canv.width / rect.width;
+            _draw((e.clientX - rect.left) * scale, (e.clientY - rect.top) * scale);
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            _toggleLeftMouseButtonDown();
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            _toggleLeftMouseButtonUp();
+        })
+    </script>
+</body>
+
+</html>

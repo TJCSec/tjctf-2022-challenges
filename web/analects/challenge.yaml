@@ -1,0 +1,43 @@
+name: analects
+author: kfb
+description: |-
+  confucius was a cool guy I think he said some things
+
+  {{ link }}
+
+flag:
+  file: mysql/init/flag.txt
+provide:
+  - kind: zip
+    spec:
+      as: server.zip
+      exclude:
+        - mysql/init/flag.txt
+      files:
+        - docker-compose.yaml
+        - app
+        - mysql
+      additional:
+        - path: mysql/init/flag.txt
+          str: this is not the real flag
+
+containers:
+  app:
+    build: app
+    replicas: 1
+    ports:
+      - 80
+  mysql:
+    build: mysql
+    replicas: 1
+    ports:
+      - 3306
+    resources:
+      limits:
+        memory: 500Mi
+      requests:
+        memory: 100Mi
+expose:
+  app:
+    - target: 80
+      http: analects

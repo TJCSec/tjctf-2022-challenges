@@ -1,0 +1,13 @@
+name: cipher-master
+author: nthistle
+description: |-
+  I've been studying ciphers lately and came up with this new one! I'm so confident in its security that I'll give you a flag encrypted with it. I also tested it by encrypting this meme I made, what do you think?
+
+flag:
+  file: ./flag.txt
+
+provide:
+  - ./cipher.py
+  - ./lol.bmp
+  - ./lol.bmp.enc
+  - ./flag.txt.enc

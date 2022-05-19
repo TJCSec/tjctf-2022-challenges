@@ -1,0 +1,114 @@
+# 99 bottles of beer
+mov [l_num], 99
+l_print_beer:
+mov r1, [l_num]
+mov r2, l_buf
+cal l_str_num
+mov [l_len], r0
+mov r1, 1
+mov r2, l_buf
+mov r3, [l_len]
+sys S_write
+mov r1, 1
+mov r2, l_bottles
+mov r3, 28
+sys S_write
+mov r1, 1
+mov r2, l_comma
+mov r3, 2
+sys S_write
+mov r1, 1
+mov r2, l_buf
+mov r3, [l_len]
+sys S_write
+mov r1, 1
+mov r2, l_bottles
+mov r3, 16
+sys S_write
+mov r1, 1
+mov r2, l_period
+mov r3, 2
+sys S_write
+mov r1, 1
+mov r2, l_take
+mov r3, 29
+sys S_write
+mov r1, 1
+mov r2, l_comma
+mov r3, 2
+sys S_write
+
+sub [l_num], 1
+l_finished:
+cet [l_num], 0
+jpt l_end
+mov r1, [l_num]
+mov r2, l_buf
+cal l_str_num
+mov [l_len], r0
+mov r1, 1
+mov r2, l_buf
+mov r3, [l_len]
+sys S_write
+mov r1, 1
+mov r2, l_bottles
+mov r3, 28
+sys S_write
+mov r1, 1
+mov r2, l_period
+mov r3, 3
+sys S_write
+jmp l_print_beer
+
+l_end:
+mov r1, 1
+mov r2, l_no_more
+mov r3, 2
+sys S_write
+mov r1, 1
+mov r2, l_bottles
+mov r3, 28
+sys S_write
+mov r1, 1
+mov r2, l_period
+mov r3, 3
+sys S_write
+mov r1, 0
+sys S_exit
+
+l_str_num:
+mov r3, r1
+div r1, 10
+mov r0, r1
+mul r0, 10
+sub r3, r0
+add r3, 0x30
+cet r1, 0
+jpt l_str_num_one
+add r1, 0x30
+shl r3, 8
+add r1, r3
+mov [r2], r1
+mov r0, 2
+ret
+l_str_num_one:
+mov [r2], r3
+mov r0, 1
+ret
+
+l_num:
+.var 1
+l_len:
+.var 1
+l_buf:
+.var 2
+l_no_more:
+.str 'No'
+l_bottles:
+.str ' bottles of beer on the wall'
+l_take:
+.str 'Take one down, pass it around'
+l_comma:
+.str ',\n'
+l_period:
+.str '.\n\n'

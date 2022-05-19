@@ -1,0 +1,40 @@
+name: babyheap
+author: kfb
+description: |-
+  This guy loves small Docker images so much, he spent a week golfing down the size instead of learning how to write code properly. Can you still exploit it?
+
+  `{{ nc }}`
+
+provide:
+  - bin/chall
+  - Dockerfile
+
+flag:
+  file: bin/flag.txt
+
+containers:
+  main:
+    build: .
+    replicas: 1
+    ports:
+      - 5000
+    k8s:
+      container:
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - all
+            add:
+              - chown
+              - setuid
+              - setgid
+              - sys_admin
+      metadata:
+        annotations:
+          container.apparmor.security.beta.kubernetes.io/main: unconfined
+
+expose:
+  main:
+    - target: 5000
+      tcp: 31178

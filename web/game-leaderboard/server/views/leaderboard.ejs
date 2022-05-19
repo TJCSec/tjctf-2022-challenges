@@ -1,0 +1,43 @@
+<!DOCTYPE >
+<html>
+	<head>
+        <meta charset="utf-8">
+        <title>Leaderboard</title>
+        <link href="/styles.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+	<body class="min-h-full flex flex-col">
+		<div class="px-4 py-2 flex flex-col flex-grow items-center">
+            <div class="w-full md:w-1/2">
+                <div class="font-bold text-4xl text-center mb-4">
+                    Leaderboard
+                </div>
+                <div class="mb-3 flex flex-row">
+                    <div class="w-3/4">
+                        <form action="/" method="POST">
+                            <label for="filter-input">Filter:</label>
+                            <input type="number" id="filter-input" name="filter" class="border border-black" autocomplete="off" >
+                            <input type="Submit" value="Submit" class="border border-black px-2">
+                        </form>
+                    </div>
+                </div>
+                <table class="w-full">
+                    <thead class="font-bold">
+                        <td>#</td>
+                        <td>Name</td>
+                        <td class="text-center">Score</td>
+                    </thead>
+                    <tbody id="table-body">
+                        <% for (let i = 0; i < locals.leaderboard.length; i++) {%>
+                        <tr>
+                            <td><%= locals.leaderboard[i].rank %></td>
+                            <td><%= locals.leaderboard[i].name %></td>
+                            <td class="text-center"><%= locals.leaderboard[i].score %></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

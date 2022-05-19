@@ -1,0 +1,7 @@
+*
+!/Dockerfile
+!/flag.txt
+!/server
+
+*/node_modules/
+*/views/uploads/

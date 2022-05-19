@@ -1,0 +1,9 @@
+name: take-a-l
+author: kpdfgo
+description: |-
+  I need W :angry:
+
+flag: tjctf{gggamersssssssss5s}
+
+provide:
+  - ./chall

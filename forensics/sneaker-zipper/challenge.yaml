@@ -1,0 +1,9 @@
+name: sneaker-zipper
+author: kfb
+description: |-
+  Sometimes the zippers can be sneaky...
+flag:
+  file: flag.txt
+
+provide:
+  - chall.zip
